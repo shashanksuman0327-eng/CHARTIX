@@ -1,0 +1,6 @@
+'use client';
+import Link from 'next/link';
+import { Bell, Moon, Train, UserCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+const links = ['Dashboard','Search','Journey','Analytics','History','Settings'];
+export function Navbar() { return <header className="sticky top-0 z-50 border-b border-white/10 bg-railway-bg/80 backdrop-blur-xl"><nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3"><Link href="/" className="flex items-center gap-3 font-bold"><span className="rounded-2xl bg-railway-blue p-2"><Train /></span><span>Chartix</span></Link><div className="no-scrollbar hidden gap-1 overflow-x-auto md:flex">{links.map((link)=><Link className="rounded-full px-4 py-2 text-sm text-slate-300 transition hover:bg-white/10 hover:text-white" key={link} href={link==='Dashboard'?'/':`/${link.toLowerCase()}`}>{link}</Link>)}</div><div className="flex items-center gap-2"><motion.button whileTap={{scale:.95}} aria-label="Toggle dark mode" className="rounded-full bg-white/10 p-2"><Moon size={18}/></motion.button><button aria-label="Notifications" className="rounded-full bg-white/10 p-2"><Bell size={18}/></button><button aria-label="User profile" className="rounded-full bg-white/10 p-2"><UserCircle size={20}/></button></div></nav></header>; }

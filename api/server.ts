@@ -1,0 +1,7 @@
+import cookieParser from 'cookie-parser';import csrf from 'csurf';import express from 'express';import rateLimit from 'express-rate-limit';import helmet from 'helmet';import jwt from 'jsonwebtoken';import { z } from 'zod';import { MockRailwayProvider } from '../services/mockRailwayProvider';
+const app = express();const provider = new MockRailwayProvider();const jwtSecret = process.env.JWT_SECRET ?? 'development-secret-change-me';
+app.use(helmet());app.use(express.json({limit:'1mb'}));app.use(cookieParser());app.use(rateLimit({windowMs:60_000,limit:120}));app.use(csrf({cookie:{httpOnly:true,sameSite:'strict',secure:process.env.NODE_ENV==='production'}}));
+app.post('/auth/login',(req,res)=>{ const token=jwt.sign({sub:'demo-operator',role:'operator'},jwtSecret,{expiresIn:'8h'}); res.cookie('chartix_session',token,{httpOnly:true,sameSite:'strict',secure:process.env.NODE_ENV==='production'}).json({ok:true}); });
+app.get('/charts/search',async(req,res,next)=>{ try{ const query=z.object({trainNumber:z.string().regex(/^\d{5}$/),date:z.string(),source:z.string(),destination:z.string()}).parse(req.query); res.json(await provider.searchChart(query)); }catch(error){ next(error); }});
+app.use((error: unknown,_req: express.Request,res: express.Response,_next: express.NextFunction)=>res.status(400).json({error:error instanceof Error?error.message:'Invalid request'}));
+app.listen(Number(process.env.PORT ?? 4000),()=>console.log('Chartix API running'));

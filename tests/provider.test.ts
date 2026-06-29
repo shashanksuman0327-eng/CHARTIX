@@ -1,0 +1,2 @@
+import { describe, expect, it } from 'vitest';import { MockRailwayProvider } from '../services/mockRailwayProvider';
+describe('MockRailwayProvider',()=>{ it('returns a complete chart',async()=>{ const chart=await new MockRailwayProvider().searchChart({trainNumber:'12952',date:'2026-06-29',source:'NDLS',destination:'BCT'}); expect(chart.coaches.length).toBeGreaterThan(5); expect(chart.route[0]?.code).toBe('NDLS'); }); });

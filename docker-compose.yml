@@ -1,0 +1,7 @@
+services:
+  chartix:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_URL: file:./dev.db
+      JWT_SECRET: change-me
